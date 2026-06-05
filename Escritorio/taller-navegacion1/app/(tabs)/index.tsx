@@ -1,17 +1,19 @@
+import { Ionicons } from '@expo/vector-icons';
+import { Picker } from '@react-native-picker/picker';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
   Modal,
+  Platform,
+  Pressable,
   ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Picker } from '@react-native-picker/picker';
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
 
 export default function HomeScreen() {
   const [mensaje, setMensaje] = useState('');
@@ -19,6 +21,10 @@ export default function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalTipo, setModalTipo] = useState<'info' | 'exito' | 'alerta'>('info');
   const [opcion, setOpcion] = useState('JavaScript');
+
+  // Solo para iOS: controla el modal del picker
+  const [pickerVisible, setPickerVisible] = useState(false);
+  const [tempOpcion, setTempOpcion] = useState('JavaScript');
 
   const presionarBtn = (texto: string, color = '#6C63FF') => {
     setMensaje(texto);
@@ -63,57 +69,109 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>Expo Router + Navegación</Text>
       </LinearGradient>
 
-      {/* ── PARTE 1: BOTONES ─────────────────────────── */}
-      <Text style={styles.section}>🔘 Parte 1 — Botones</Text>
+{/* ── PARTE 3: DROPDOWN ────────────────────────── */}
+<Text style={styles.section}>Parte 3 — Dropdown (Android & iOS)</Text>
 
-      <View style={styles.btnRow}>
-        <TouchableOpacity
-          style={[styles.btn, { backgroundColor: '#6C63FF' }]}
-          onPress={() => presionarBtn('✅ Botón Primario — onPress!', '#6C63FF')}
-          activeOpacity={0.8}
+<View style={styles.pickerCard}>
+  <Text style={styles.pickerLabel}>Lenguaje favorito</Text>
+
+  {/* Android */}
+  {Platform.OS === 'android' && (
+    <View style={styles.pickerWrap}>
+      <Picker
+        selectedValue={opcion}
+        onValueChange={(val) => setOpcion(val)}
+        style={styles.picker}
+      >
+        <Picker.Item label="JavaScript" value="JavaScript" />
+        <Picker.Item label="TypeScript" value="TypeScript" />
+        <Picker.Item label="Python" value="Python" />
+        <Picker.Item label="Java" value="Java" />
+        <Picker.Item label="Kotlin" value="Kotlin" />
+        <Picker.Item label="Swift" value="Swift" />
+      </Picker>
+    </View>
+  )}
+
+  {/* iOS */}
+  {Platform.OS === 'ios' && (
+    <>
+      <TouchableOpacity
+        style={styles.iosPickerBtn}
+        onPress={() => {
+          setTempOpcion(opcion);
+          setPickerVisible(true);
+        }}
+      >
+        <Text style={styles.iosPickerBtnTxt}>{opcion}</Text>
+        <Ionicons name="chevron-down" size={18} color="#6C63FF" />
+      </TouchableOpacity>
+
+      <Modal
+        visible={pickerVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setPickerVisible(false)}
+      >
+        <Pressable
+          style={styles.iosOverlay}
+          onPress={() => setPickerVisible(false)}
         >
-          <Ionicons name="flash" size={18} color="#FFF" />
-          <Text style={styles.btnTxt}>Primario</Text>
-        </TouchableOpacity>
+          <Pressable onPress={() => {}}>
+            <View style={styles.iosSheet}>
+              <View style={styles.iosSheetHeader}>
+                <TouchableOpacity
+                  onPress={() => setPickerVisible(false)}
+                >
+                  <Text style={styles.iosCancelTxt}>Cancelar</Text>
+                </TouchableOpacity>
 
-        <TouchableOpacity
-          style={[styles.btn, { backgroundColor: '#EC4899' }]}
-          onPress={() => presionarBtn('💖 Botón Secundario — onPress!', '#EC4899')}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="heart" size={18} color="#FFF" />
-          <Text style={styles.btnTxt}>Secundario</Text>
-        </TouchableOpacity>
-      </View>
+                <Text style={styles.iosSheetTitle}>
+                  Lenguaje favorito
+                </Text>
 
-      <View style={styles.btnRow}>
-        <TouchableOpacity
-          style={[styles.btn, { backgroundColor: '#10B981' }]}
-          onPress={() => presionarBtn('🌟 Botón Éxito — onPress!', '#10B981')}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="checkmark-circle" size={18} color="#FFF" />
-          <Text style={styles.btnTxt}>Éxito</Text>
-        </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setOpcion(tempOpcion);
+                    setPickerVisible(false);
+                  }}
+                >
+                  <Text style={styles.iosDoneTxt}>Listo</Text>
+                </TouchableOpacity>
+              </View>
 
-        <TouchableOpacity
-          style={[styles.btn, { backgroundColor: '#EF4444' }]}
-          onPress={() => presionarBtn('🔴 Botón Peligro — onPress!', '#EF4444')}
-          activeOpacity={0.8}
-        >
-          <Ionicons name="trash" size={18} color="#FFF" />
-          <Text style={styles.btnTxt}>Peligro</Text>
-        </TouchableOpacity>
-      </View>
+              <Picker
+                selectedValue={tempOpcion}
+                onValueChange={(val) => setTempOpcion(val)}
+                style={styles.iosWheelPicker}
+                itemStyle={{
+                  color: '#000',
+                  fontSize: 20,
+                }}
+              >
+                <Picker.Item label="JavaScript" value="JavaScript" />
+                <Picker.Item label="TypeScript" value="TypeScript" />
+                <Picker.Item label="Python" value="Python" />
+                <Picker.Item label="Java" value="Java" />
+                <Picker.Item label="Kotlin" value="Kotlin" />
+                <Picker.Item label="Swift" value="Swift" />
+              </Picker>
+            </View>
+          </Pressable>
+        </Pressable>
+      </Modal>
+    </>
+  )}
 
-      {mensaje !== '' && (
-        <View style={[styles.feedback, { borderLeftColor: colorMensaje }]}>
-          <Text style={[styles.feedbackTxt, { color: colorMensaje }]}>{mensaje}</Text>
-        </View>
-      )}
-
+  <View style={styles.selectedBox}>
+    <Ionicons name="code-slash" size={18} color="#6C63FF" />
+    <Text style={styles.selectedTxt}>
+      Seleccionaste: {opcion}
+    </Text>
+  </View>
+</View>
       {/* ── PARTE 2: MODAL ───────────────────────────── */}
-      <Text style={styles.section}>💬 Parte 2 — Dialog / Modal</Text>
+      <Text style={styles.section}> Parte 2 — Dialog / Modal</Text>
 
       <View style={styles.modalBtns}>
         <TouchableOpacity
@@ -171,24 +229,84 @@ export default function HomeScreen() {
       </Modal>
 
       {/* ── PARTE 3: DROPDOWN ────────────────────────── */}
-      <Text style={styles.section}>📋 Parte 3 — Dropdown (Android & iOS)</Text>
+      <Text style={styles.section}>Parte 3 — Dropdown (Android & iOS)</Text>
 
       <View style={styles.pickerCard}>
         <Text style={styles.pickerLabel}>Lenguaje favorito</Text>
-        <View style={styles.pickerWrap}>
-          <Picker
-            selectedValue={opcion}
-            onValueChange={(val) => setOpcion(val)}
-            style={styles.picker}
-          >
-            <Picker.Item label="JavaScript" value="JavaScript" />
-            <Picker.Item label="TypeScript" value="TypeScript" />
-            <Picker.Item label="Python" value="Python" />
-            <Picker.Item label="Java" value="Java" />
-            <Picker.Item label="Kotlin" value="Kotlin" />
-            <Picker.Item label="Swift" value="Swift" />
-          </Picker>
-        </View>
+
+        {/* Android: funciona directo, sin cambios */}
+        {Platform.OS === 'android' && (
+          <View style={styles.pickerWrap}>
+            <Picker
+              selectedValue={opcion}
+              onValueChange={(val) => setOpcion(val)}
+              style={styles.picker}
+            >
+              <Picker.Item label="JavaScript" value="JavaScript" />
+              <Picker.Item label="TypeScript" value="TypeScript" />
+              <Picker.Item label="Python"     value="Python"     />
+              <Picker.Item label="Java"       value="Java"       />
+              <Picker.Item label="Kotlin"     value="Kotlin"     />
+              <Picker.Item label="Swift"      value="Swift"      />
+            </Picker>
+          </View>
+        )}
+
+        {/* iOS: botón que abre bottom sheet con wheel picker */}
+        {Platform.OS === 'ios' && (
+          <>
+            <TouchableOpacity
+              style={styles.iosPickerBtn}
+              onPress={() => {
+                setTempOpcion(opcion);
+                setPickerVisible(true);
+              }}
+            >
+              <Text style={styles.iosPickerBtnTxt}>{opcion}</Text>
+              <Ionicons name="chevron-down" size={16} color="#6C63FF" />
+            </TouchableOpacity>
+
+            <Modal
+              visible={pickerVisible}
+              transparent
+              animationType="slide"
+              onRequestClose={() => setPickerVisible(false)}
+            >
+              <TouchableOpacity
+                style={styles.iosOverlay}
+                activeOpacity={1}
+                onPress={() => setPickerVisible(false)}
+              >
+                <TouchableOpacity activeOpacity={1} onPress={() => {}}>
+                  <View style={styles.iosSheet}>
+                    <View style={styles.iosSheetHeader}>
+                      <TouchableOpacity onPress={() => setPickerVisible(false)}>
+                        <Text style={styles.iosCancelTxt}>Cancelar</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.iosSheetTitle}>Lenguaje favorito</Text>
+                      <TouchableOpacity onPress={() => { setOpcion(tempOpcion); setPickerVisible(false); }}>
+                        <Text style={styles.iosDoneTxt}>Listo</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Picker
+                      selectedValue={tempOpcion}
+                      onValueChange={(val) => setTempOpcion(val)}
+                      style={styles.iosWheelPicker}
+                    >
+                      <Picker.Item label="JavaScript" value="JavaScript" />
+                      <Picker.Item label="TypeScript" value="TypeScript" />
+                      <Picker.Item label="Python"     value="Python"     />
+                      <Picker.Item label="Java"       value="Java"       />
+                      <Picker.Item label="Kotlin"     value="Kotlin"     />
+                      <Picker.Item label="Swift"      value="Swift"      />
+                    </Picker>
+                  </View>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            </Modal>
+          </>
+        )}
+
         <View style={styles.selectedBox}>
           <Ionicons name="code-slash" size={18} color="#6C63FF" />
           <Text style={styles.selectedTxt}>Seleccionaste: {opcion}</Text>
@@ -196,7 +314,7 @@ export default function HomeScreen() {
       </View>
 
       {/* ── NAVEGACIÓN ───────────────────────────────── */}
-      <Text style={styles.section}>🗺️ Navegar</Text>
+      <Text style={styles.section}>Navegar</Text>
 
       <TouchableOpacity
         style={styles.navOption}
@@ -272,6 +390,29 @@ const styles = StyleSheet.create({
     backgroundColor: '#EDE9FE', borderRadius: 10, padding: 10,
   },
   selectedTxt: { color: '#6C63FF', fontWeight: '700' },
+  
+  // ── iOS ──────────────────────────────────────────
+  iosPickerBtn: {
+    backgroundColor: '#F8F7FF', borderRadius: 14, paddingHorizontal: 14,
+    paddingVertical: 14, flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  iosPickerBtnTxt: { color: '#1E293B', fontSize: 15, fontWeight: '600' },
+  iosOverlay: {
+    flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+  iosSheet: {
+    backgroundColor: '#FFF', borderTopLeftRadius: 20, borderTopRightRadius: 20, paddingBottom: 34,
+  },
+  iosSheetHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingHorizontal: 20, paddingVertical: 14,
+    borderBottomWidth: 1, borderBottomColor: '#E2E8F0',
+  },
+  iosSheetTitle: { fontWeight: '700', color: '#1E293B', fontSize: 15 },
+  iosCancelTxt: { color: '#64748B', fontSize: 15 },
+  iosDoneTxt: { color: '#6C63FF', fontWeight: '700', fontSize: 15 },
+  iosWheelPicker: { width: '100%' },
   navOption: {
     backgroundColor: '#FFF', borderRadius: 18, padding: 16,
     flexDirection: 'row', alignItems: 'center', gap: 14, marginBottom: 12,

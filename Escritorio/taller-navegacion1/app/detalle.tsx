@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'; //TouchableOpacity — componente de botón que se vuelve semitransparente al presionarse. Se usa para el botón "Volver atrás".
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';//s el objeto de Expo Router que permite controlar la navegación desde el código, sin necesidad de tocar ningún botón de la interfaz
+import { router } from 'expo-router';//es el objeto de Expo Router que permite controlar la navegación desde el código, sin necesidad de tocar ningún botón de la interfaz
 
 export default function DetalleScreen() {
   return (
