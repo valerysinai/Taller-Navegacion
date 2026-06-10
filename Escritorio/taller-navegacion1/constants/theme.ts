@@ -1,53 +1,45 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// ─────────────────────────────────────────────────────────────
+// theme.ts — Colores, tipografía y sombras centralizados
+// Cambia aquí y se aplica en toda la app automáticamente
+// ─────────────────────────────────────────────────────────────
 
-import { Platform } from 'react-native';
+export const COLORS = {
+  primary:     '#6C63FF',
+  primaryDark: '#4834DF',
+  success:     '#22C55E',
+  successDark: '#16A34A',
+  warning:     '#F59E0B',
+  warningDark: '#D97706',
+  danger:      '#EF4444',
+  pink:        '#EC4899',
+  pinkDark:    '#BE185D',
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+  // Fondos
+  background:  '#F5F7FB',
+  surface:     '#FFFFFF',
+  surfaceAlt:  '#F8F7FF',
 
-export const Colors = {
-  light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
-  },
-  dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
-  },
+  // Texto
+  textPrimary:   '#1E293B',
+  textSecondary: '#64748B',
+  textMuted:     '#94A3B8',
+
+  // Bordes y separadores
+  border:      '#F1F5F9',
+  borderLight: '#E2E8F0',
 };
 
-export const Fonts = Platform.select({
-  ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
-  },
-  default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
-  },
-  web: {
-    sans: "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    serif: "Georgia, 'Times New Roman', serif",
-    rounded: "'SF Pro Rounded', 'Hiragino Maru Gothic ProN', Meiryo, 'MS PGothic', sans-serif",
-    mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-  },
-});
+// Degradados reutilizables
+export const GRADIENTS = {
+  primary: [COLORS.primary, COLORS.primaryDark] as [string, string],
+  pink:    [COLORS.pink,    COLORS.pinkDark]    as [string, string],
+};
+
+// Sombra estándar para tarjetas (funciona en Android e iOS)
+export const SHADOW = {
+  elevation:    2,
+  shadowColor:  '#000',
+  shadowOpacity: 0.05,
+  shadowRadius: 8,
+  shadowOffset: { width: 0, height: 2 },
+};

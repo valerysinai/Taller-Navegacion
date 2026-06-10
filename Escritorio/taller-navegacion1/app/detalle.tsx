@@ -1,45 +1,62 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'; //TouchableOpacity — componente de botón que se vuelve semitransparente al presionarse. Se usa para el botón "Volver atrás".
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';//es el objeto de Expo Router que permite controlar la navegación desde el código, sin necesidad de tocar ningún botón de la interfaz
+import { router } from 'expo-router';
+import React from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { GradientHeader } from '../components/ui';
+import { COLORS, SHADOW } from '../constants/theme';
+
+// ── Datos ────────────────────────────────────────────────────
+
+const INFO_STACK = [
+  { label: 'Tipo',        value: 'Stack Navigator'        },
+  { label: 'Navegación',  value: "router.push('/detalle')" },
+  { label: 'Retorno',     value: 'router.back()'          },
+];
+
+const CODIGO_EJEMPLO = `// Navegar a esta pantalla
+router.push('/detalle');
+
+// Volver a la pantalla anterior
+router.back();
+
+// Expo Router convierte cada
+// archivo en una ruta automática`;
+
+// ── Componente ───────────────────────────────────────────────
 
 export default function DetalleScreen() {
   return (
     <ScrollView style={styles.container}>
-      <LinearGradient colors={['#6C63FF', '#4834DF']} style={styles.banner}>
-        <Ionicons name="document-text" size={48} color="rgba(255,255,255,0.9)" />
-        <Text style={styles.bannerTitle}>Pantalla Detalle</Text>
-        <Text style={styles.bannerSub}>Stack Navigation — Expo Router</Text>
-      </LinearGradient>
+      <GradientHeader
+        icon="document-text"
+        title="Pantalla Detalle"
+        subtitle="Stack Navigation — Expo Router"
+        iconSize={48}
+      />
 
       <View style={styles.body}>
         <Text style={styles.sectionTitle}>¿Cómo llegué aquí?</Text>
 
+        {/* Tarjeta informativa */}
         <View style={styles.infoCard}>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>Tipo</Text>
-            <Text style={styles.infoVal}>Stack Navigator</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>Navegación</Text>
-            <Text style={styles.infoVal}>router.push('/detalle')</Text>
-          </View>
-          <View style={styles.divider} />
-          <View style={styles.infoRow}>
-            <Text style={styles.infoKey}>Retorno</Text>
-            <Text style={styles.infoVal}>router.back()</Text>
-          </View>
-        </View> 
-
-        <Text style={styles.sectionTitle}>Código de ejemplo</Text>
-        <View style={styles.codeBlock}>
-          <Text style={styles.code}>
-            {`// Navegar a detalle\nrouter.push('/detalle');\n\n// Volver atrás\nrouter.back();\n\n// Expo Router usa el\n// sistema de archivos\n// como rutas automáticas`}
-          </Text>
+          {INFO_STACK.map(({ label, value }, index) => (
+            <React.Fragment key={label}>
+              <View style={styles.infoRow}>
+                <Text style={styles.infoKey}>{label}</Text>
+                <Text style={styles.infoVal}>{value}</Text>
+              </View>
+              {index < INFO_STACK.length - 1 && <View style={styles.divider} />}
+            </React.Fragment>
+          ))}
         </View>
 
+        {/* Bloque de código */}
+        <Text style={styles.sectionTitle}>Código de ejemplo</Text>
+        <View style={styles.codeBlock}>
+          <Text style={styles.code}>{CODIGO_EJEMPLO}</Text>
+        </View>
+
+        {/* Botón volver */}
         <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={20} color="#FFF" />
           <Text style={styles.backBtnTxt}>Volver atrás</Text>
@@ -49,27 +66,25 @@ export default function DetalleScreen() {
   );
 }
 
-//Estilos para los componentes de la pantalla, utilizando StyleSheet de React Native para mantener el código organizado y fácil de mantener.
+// ── Estilos ──────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  container:    { flex: 1, backgroundColor: '#F5F7FB' },
-  banner:       { padding: 36, alignItems: 'center', gap: 8 },
-  bannerTitle:  { color: '#FFF', fontSize: 24, fontWeight: 'bold' },
-  bannerSub:    { color: 'rgba(255,255,255,0.75)', fontSize: 14 },
+  container:    { flex: 1, backgroundColor: COLORS.background },
   body:         { padding: 20 },
-  sectionTitle: { fontWeight: '700', fontSize: 17, color: '#1E293B', marginBottom: 12, marginTop: 8 },
-  infoCard:     {
-    backgroundColor: '#FFF', borderRadius: 20, padding: 18, marginBottom: 20,
-    elevation: 2, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8,
+  sectionTitle: { fontWeight: '700', fontSize: 17, color: COLORS.textPrimary, marginBottom: 12, marginTop: 8 },
+  infoCard: {
+    backgroundColor: COLORS.surface, borderRadius: 20,
+    padding: 18, marginBottom: 20, ...SHADOW,
   },
-  infoRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 4 },
-  infoKey:      { color: '#94A3B8', fontSize: 13, fontWeight: '600' },
-  infoVal:      { color: '#1E293B', fontSize: 13, fontWeight: '700', flex: 1, textAlign: 'right' },
-  divider:      { height: 1, backgroundColor: '#F1F5F9', marginVertical: 10 },
-  codeBlock:    { backgroundColor: '#1A1A2E', borderRadius: 16, padding: 18, marginBottom: 24 },
-  code:         { color: '#A5B4FC', fontFamily: 'monospace', fontSize: 13, lineHeight: 22 },
-  backBtn:      {
-    backgroundColor: '#6C63FF', flexDirection: 'row', alignItems: 'center',
+  infoRow:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 4 },
+  infoKey:  { color: COLORS.textMuted, fontSize: 13, fontWeight: '600' },
+  infoVal:  { color: COLORS.textPrimary, fontSize: 13, fontWeight: '700', flex: 1, textAlign: 'right' },
+  divider:  { height: 1, backgroundColor: COLORS.border, marginVertical: 8 },
+  codeBlock:{ backgroundColor: '#1A1A2E', borderRadius: 16, padding: 18, marginBottom: 24 },
+  code:     { color: '#A5B4FC', fontFamily: 'monospace', fontSize: 13, lineHeight: 22 },
+  backBtn: {
+    backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center',
     justifyContent: 'center', gap: 8, padding: 16, borderRadius: 18, marginBottom: 20,
   },
-  backBtnTxt:   { color: '#FFF', fontWeight: '700', fontSize: 16 },
+  backBtnTxt: { color: '#FFF', fontWeight: '700', fontSize: 16 },
 });
