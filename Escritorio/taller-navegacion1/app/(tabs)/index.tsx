@@ -84,7 +84,7 @@ export default function HomeScreen() {
       </LinearGradient>
 
       {/* ── PARTE 1: BOTONES ──────────────────────────────── */}
-      <SectionTitle>🔘 Parte 1 — Botones</SectionTitle>
+      <SectionTitle>Parte 1 — Botones</SectionTitle>
 
       <View style={styles.btnGrid}>
         {BOTONES.map(({ label, color, icon }) => (
@@ -107,7 +107,7 @@ export default function HomeScreen() {
       )}
 
       {/* ── PARTE 2: MODAL ────────────────────────────────── */}
-      <SectionTitle>💬 Parte 2 — Dialog / Modal</SectionTitle>
+      <SectionTitle>Parte 2 — Dialog / Modal</SectionTitle>
 
       <View style={styles.modalTriggers}>
         {MODAL_TRIGGERS.map(({ tipo, label, color, bg }) => (
@@ -152,7 +152,7 @@ export default function HomeScreen() {
       </Modal>
 
       {/* ── PARTE 3: DROPDOWN ─────────────────────────────── */}
-      <SectionTitle>📋 Parte 3 — Dropdown (Android & iOS)</SectionTitle>
+      <SectionTitle>Parte 3 — Dropdown (Android & iOS)</SectionTitle>
 
       <View style={styles.pickerCard}>
         <Text style={styles.pickerLabel}>Lenguaje favorito</Text>
@@ -216,7 +216,7 @@ export default function HomeScreen() {
       </View>
 
       {/* ── NAVEGACIÓN ────────────────────────────────────── */}
-      <SectionTitle>🗺️ Navegar</SectionTitle>
+      <SectionTitle>Navegar</SectionTitle>
 
       {NAVEGACION.map(({ ruta, icon, label, bg, color }) => (
         <TouchableOpacity key={ruta} style={styles.navOption} onPress={() => router.push(ruta as any)}>
